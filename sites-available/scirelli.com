@@ -18,10 +18,10 @@
 ##
 
 server {
-	#listen 80 default_server;
-	#listen [::]:80 default_server ipv6only=on;
 	listen 80;
 	listen [::]:80;
+	#listen 80 default_server;
+	#listen [::]:80 default_server ipv6only=on;
 
 	# Make site accessible from http://localhost/
 	server_name scirelli.com;
