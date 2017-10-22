@@ -12,19 +12,17 @@
 ##
 
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server ipv6only=on;
-	#listen 80;
-	#listen [::]:80 ipv6only=on;
+	listen 80;
+	listen [::]:80;
 
 	# Make site accessible from http://localhost/
-	server_name localhost cirelli.org rpi3_webserver.cirelli.lan 192.168.1.17;
+	server_name nlsdr.com www.nlsdr.com;
 
-	root /var/www/html/cirelli.org/html;
+	root /var/www/html/nlsdr.com/html;
 	index index.html index.htm;
 
-    access_log /var/log/nginx/cirelli.org/access.log;
-    error_log /var/log/nginx/cirelli.org/error.log;
+    access_log /var/log/nginx/nlsdr.com/access.log;
+    error_log /var/log/nginx/nlsdr.com/error.log;
 
     gzip on;
 
@@ -36,13 +34,9 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
-	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
-	}
-
     location /cgi-bin/ {
         gzip off;
-        root /var/www/html/cirelli.org;
+        root /var/www/html/nlsdr.com;
         fastcgi_pass unix:/var/run/fcgiwrap.socket;
         include /etc/nginx/fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -54,7 +48,7 @@ server {
 	#
 	error_page 500 502 503 504 /50x.html;
 	location = /50x.html {
-		root /var/www/html/cirelli.org/html;
+		root /var/www/html/nlsdr.com/html;
 	}
 }
 
@@ -65,9 +59,9 @@ server {
 	listen 443 ssl;
 
 	# Make site accessible from https://localhost/
-	server_name localhost cirelli.org rpi3_webserver.cirelli.lan 192.168.1.17;
+	server_name nlsdr.com;
 
-	root /var/www/html/cirelli.org/html;
+	root /var/www/html/nlsdr.com/html;
 	index index.html index.htm;
 
 	ssl on;
@@ -87,25 +81,13 @@ server {
     ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
 	ssl_prefer_server_ciphers on;
 
-    access_log /var/log/nginx/cirelli.org/ssl_cirelli.org_access.log;
-    error_log /var/log/nginx/cirelli.org/ssl_cirelli.org_error.log;
+    access_log /var/log/nginx/nlsdr.com/ssl_nlsdr.com_access.log;
+    error_log /var/log/nginx/nlsdr.com/ssl_nlsdr.com_error.log;
     #log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
 
 	location / {
 		try_files $uri $uri/ =404;
 	}
-
-	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
-	}
-    
-    location /cgi-bin/ {
-        gzip off;
-        root /var/www/html/cirelli.org/cgi-bin;
-        fastcgi_pass unix:/var/run/fcgiwrap.socket;
-        include /etc/nginx/fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
 
 	error_page 404 /404.html;
 
@@ -113,6 +95,6 @@ server {
 	#
 	error_page 500 502 503 504 /50x.html;
 	location = /50x.html {
-		root /var/www/html/cirelli.org/html;
+		root /var/www/html/nlsdr.com/html;
 	}
 }

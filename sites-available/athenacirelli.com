@@ -34,13 +34,21 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
+    location /cgi-bin/ {
+        gzip off;
+        root /var/www/html/cirelli.org;
+        fastcgi_pass unix:/var/run/fcgiwrap.socket;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
 	error_page 404 /404.html;
 
 	# redirect server error pages to the static page /50x.html
 	#
 	error_page 500 502 503 504 /50x.html;
 	location = /50x.html {
-		root /var/www/html/cirelli.org/html;
+		root /var/www/html/athenacirelli.com/html;
 	}
 }
 
