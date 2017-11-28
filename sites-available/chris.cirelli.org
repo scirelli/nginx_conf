@@ -89,6 +89,14 @@ server {
 		try_files $uri $uri/ =404;
 	}
 
+    location /cgi-bin/ {
+        gzip off;
+        root /var/www/html/chris.cirelli.org;
+        fastcgi_pass unix:/var/run/fcgiwrap.socket;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
 	error_page 404 /404.html;
 
 	# redirect server error pages to the static page /50x.html
