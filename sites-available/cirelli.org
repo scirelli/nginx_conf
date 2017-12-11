@@ -36,8 +36,12 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
+#	location /switch_1/{
+#		proxy_pass http://the_pentagon.cirelli.lan:8080/;
+#	}
+
 	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
+		proxy_pass http://Touch_P5.cirelli.lan:8080/;
 	}
 
     location /cgi-bin/ {
@@ -96,7 +100,7 @@ server {
 	}
 
 	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
+		proxy_pass http://Touch_P5.cirelli.lan:8080/;
 	}
     
     location /cgi-bin/ {

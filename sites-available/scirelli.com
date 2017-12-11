@@ -57,7 +57,7 @@ server {
 	}
 
 	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
+		proxy_pass http://Touch_P5.cirelli.lan:8080/;
 	}
 
 	#Set headers for these to proxy files. Fake files created because requests are being made for them
@@ -177,7 +177,7 @@ server {
 	}
 
 	location /switch_1/{
-		proxy_pass http://the_pentagon.cirelli.lan:8080/;
+		proxy_pass http://Touch_P5.cirelli.lan:8080/;
 	}
 
 	error_page 404 /404.html;
