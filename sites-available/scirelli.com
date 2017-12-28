@@ -25,6 +25,8 @@ server {
 
 	# Make site accessible from http://localhost/
 	server_name scirelli.com;
+	
+	return 301 https://$host$request_uri;
 
 	root /var/www/html/scirelli.com/html;
 	index index.html index.htm index.php;

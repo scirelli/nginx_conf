@@ -18,6 +18,8 @@ server {
 	# Make site accessible from http://localhost/
 	server_name athenacirelli.com;
 
+	return 301 https://$host$request_uri;
+
 	root /var/www/html/athenacirelli.com/html;
 	index index.html index.htm;
 
