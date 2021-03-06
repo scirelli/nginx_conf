@@ -26,15 +26,17 @@ server {
 	# Make site accessible from http://localhost/
 	server_name scirelli.com;
 	
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+
 	return 301 https://$host$request_uri;
 
 	root /var/www/html/scirelli.com/html;
 	index index.html index.htm index.php;
 
-    access_log /var/log/nginx/scirelli.com/access.log;
-    error_log /var/log/nginx/scirelli.com/error.log;
+	access_log /var/log/nginx/scirelli.com/access.log;
+	error_log /var/log/nginx/scirelli.com/error.log;
 
-    gzip on;
+	gzip on;
 
 	location / {
 		# First attempt to serve request as file, then
@@ -51,16 +53,16 @@ server {
     
 	location /apigotinder/{
 		#proxy_ssl_session_reuse off;
-		proxy_pass http://api.gotinder.com;
+		proxy_pass https://api.gotinder.com;
 	}
 
 	location /facebook/{
 		proxy_pass http://www.facebook.com/;
 	}
 
-	location /switch_1/{
-		proxy_pass http://Touch_P5.cirelli.lan:8080/;
-	}
+	#location /switch_1/{
+	#	proxy_pass http://Touch_P5.cirelli.lan:8080/;
+	#}
 
 	#Set headers for these to proxy files. Fake files created because requests are being made for them
 	location /wpad.dat {
@@ -81,18 +83,18 @@ server {
 
 	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
 	#
-	location ~ \.php$ {
-		try_files $uri =404;
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	#location ~ \.php$ {
+	#	try_files $uri =404;
+	#	fastcgi_split_path_info ^(.+\.php)(/.+)$;
 		# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
 	
 		# With php5-cgi alone:
 		#fastcgi_pass 127.0.0.1:9000;
 		# With php5-fpm:
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index index.php;
-		include fastcgi_params;
-	}
+	#	fastcgi_pass unix:/var/run/php5-fpm.sock;
+	#	fastcgi_index index.php;
+	#	include fastcgi_params;
+	#}
     
 	#Force tinderbot to be https
 	location /tinderbot{
@@ -131,6 +133,8 @@ server {
 	# Make site accessible from https://localhost/
 	server_name scirelli.com;
 
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+
 	root /var/www/html/scirelli.com/html;
 	index index.html index.htm index.php;
 
@@ -146,12 +150,12 @@ server {
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	#ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
-    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
+	ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
 	ssl_prefer_server_ciphers on;
 
-    access_log /var/log/nginx/scirelli.com/ssl_scirelli.com_access.log;
-    error_log /var/log/nginx/scirelli.com/ssl_scirelli.com_error.log;
-    #log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
+	access_log /var/log/nginx/scirelli.com/ssl_scirelli.com_access.log;
+	error_log /var/log/nginx/scirelli.com/ssl_scirelli.com_error.log;
+	#log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
 
 	location /apigotinder/{
         #proxy_ssl_session_reuse off;
@@ -159,28 +163,28 @@ server {
 	}
 
 	location /facebook/{
-        #proxy_ssl_session_reuse off;
-        #proxy_ignore_headers X-Accel-Redirect;
-        #proxy_set_header Host $host;
-        #proxy_set_header X-Real-IP $remote_addr;
-        #proxy_set_header Cookie "datr=lzj_U8fjKk6fRDpKJ0T_1Gp2; lu=RA-kIgLyZpFYVFsLDxsKs2BA; x-referer=%2Fphoto.php%3Ffbid%3D10100941470926828%26id%3D31701236%26set%3Decnf.31701236%26source%3D49%26refid%3D17%23%2Fvictoria.smutek%3Ffref%3Dfc_search; a11y=%7B%22sr%22%3A0%2C%22sr-ts%22%3A1413504846990%2C%22jk%22%3A0%2C%22jk-ts%22%3A1413504846990%2C%22kb%22%3A0%2C%22kb-ts%22%3A1422551314002%2C%22hcm%22%3A0%2C%22hcm-ts%22%3A1413504846990%7D; act=1422679486609%2F69; p=-2; presence=EM422745708EuserFA2587466835A2EstateFDsb2F1422679322807Et2F_5b_5dElm2FnullEuct2F1422679322807EtrFA2loadA2EtwF4269705620EatF1422745441626G422745708051CEchFDp_5f587466835F3CC; c_user=587466835; fr=0YoDriSSxk9MRqY8k.AWVtF8aj6sRu0o90wdPeofJ_DuM.BT_zlN.Zu.FTN.0.AWXKaZtU; xs=51%3AYWCBKuSX3oSgyQ%3A2%3A1409235277%3A15982; csm=2; s=Aa5ln5gAdKe1KObk.BUuUzK";
-        #client_body_in_file_only on;
+		#proxy_ssl_session_reuse off;
+		#proxy_ignore_headers X-Accel-Redirect;
+		#proxy_set_header Host $host;
+		#proxy_set_header X-Real-IP $remote_addr;
+		#proxy_set_header Cookie "datr=lzj_U8fjKk6fRDpKJ0T_1Gp2; lu=RA-kIgLyZpFYVFsLDxsKs2BA; x-referer=%2Fphoto.php%3Ffbid%3D10100941470926828%26id%3D31701236%26set%3Decnf.31701236%26source%3D49%26refid%3D17%23%2Fvictoria.smutek%3Ffref%3Dfc_search; a11y=%7B%22sr%22%3A0%2C%22sr-ts%22%3A1413504846990%2C%22jk%22%3A0%2C%22jk-ts%22%3A1413504846990%2C%22kb%22%3A0%2C%22kb-ts%22%3A1422551314002%2C%22hcm%22%3A0%2C%22hcm-ts%22%3A1413504846990%7D; act=1422679486609%2F69; p=-2; presence=EM422745708EuserFA2587466835A2EstateFDsb2F1422679322807Et2F_5b_5dElm2FnullEuct2F1422679322807EtrFA2loadA2EtwF4269705620EatF1422745441626G422745708051CEchFDp_5f587466835F3CC; c_user=587466835; fr=0YoDriSSxk9MRqY8k.AWVtF8aj6sRu0o90wdPeofJ_DuM.BT_zlN.Zu.FTN.0.AWXKaZtU; xs=51%3AYWCBKuSX3oSgyQ%3A2%3A1409235277%3A15982; csm=2; s=Aa5ln5gAdKe1KObk.BUuUzK";
+		#client_body_in_file_only on;
 		proxy_pass https://www.facebook.com/;
-        proxy_redirect off;
-        # Tells the browser this origin may make cross-origin requests
-        add_header 'Access-Control-Allow-Origin' "https://www.facebook.com";
-        add_header 'Access-Control-Allow-Methods' "POST, GET, OPTIONS";
-        # Tells the browser it may show the response, when XmlHttpRequest.withCredentials=true.
-        add_header 'Access-Control-Allow-Credentials' 'true';
+		proxy_redirect off;
+		# Tells the browser this origin may make cross-origin requests
+		add_header 'Access-Control-Allow-Origin' "https://www.facebook.com";
+		add_header 'Access-Control-Allow-Methods' "POST, GET, OPTIONS";
+		# Tells the browser it may show the response, when XmlHttpRequest.withCredentials=true.
+		add_header 'Access-Control-Allow-Credentials' 'true';
 	}
 
 	location / {
 		try_files $uri $uri/ =404;
 	}
 
-	location /switch_1/{
-		proxy_pass http://Touch_P5.cirelli.lan:8080/;
-	}
+	#location /switch_1/{
+	#	proxy_pass http://Touch_P5.cirelli.lan:8080/;
+	#}
 
 	error_page 404 /404.html;
 
@@ -193,16 +197,16 @@ server {
 
 	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
 	#
-	location ~ \.php$ {
-		try_files $uri =404;
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	#location ~ \.php$ {
+	#	try_files $uri =404;
+	#	fastcgi_split_path_info ^(.+\.php)(/.+)$;
 		# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
 	
 		# With php5-cgi alone:
 		#fastcgi_pass 127.0.0.1:9000;
 		# With php5-fpm:
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index index.php;
-		include fastcgi_params;
-	}
+	#	fastcgi_pass unix:/var/run/php5-fpm.sock;
+	#	fastcgi_index index.php;
+	#	include fastcgi_params;
+	#}
 }

@@ -18,6 +18,8 @@ server {
 	# Make site accessible from http://localhost/
 	server_name athenacirelli.com;
 
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+
 	return 301 https://$host$request_uri;
 
 	root /var/www/html/athenacirelli.com/html;
@@ -65,6 +67,8 @@ server {
 
 	root /var/www/html/athenacirelli.com/html;
 	index index.html index.htm;
+
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
 
 	ssl on;
 

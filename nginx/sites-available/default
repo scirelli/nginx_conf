@@ -31,7 +31,7 @@ server {
 	server_name _;
 
 	#Close the connection (no message)
-	return 444;
+	#return 444;
 
 	root /var/www/html;
 
