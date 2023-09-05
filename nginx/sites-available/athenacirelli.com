@@ -20,15 +20,24 @@ server {
 
 	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
 
-	return 301 https://$host$request_uri;
+	return 302 https://$host$request_uri;
 
-	root /var/www/html/athenacirelli.com/html;
+	root /var/www/athenacirelli.com/html;
 	index index.html index.htm;
 
-    access_log /var/log/nginx/athenacirelli.com/access.log;
-    error_log /var/log/nginx/athenacirelli.com/error.log;
+	access_log /var/log/nginx/athenacirelli.com/access.log;
+	error_log /var/log/nginx/athenacirelli.com/error.log;
 
-    gzip on;
+	gzip on;
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
 
 	location / {
 		# First attempt to serve request as file, then
@@ -38,13 +47,13 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
-    location /cgi-bin/ {
-        gzip off;
-        root /var/www/html/athenacirelli.com;
-        fastcgi_pass unix:/var/run/fcgiwrap.socket;
-        include /etc/nginx/fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
+	location /cgi-bin/ {
+		gzip off;
+		root /var/www/html/athenacirelli.com;
+		fastcgi_pass unix:/var/run/fcgiwrap.socket;
+		include /etc/nginx/fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
 
 	error_page 404 /404.html;
 
@@ -74,9 +83,9 @@ server {
 
 	#ssl_certificate /etc/nginx/ssl/cirelli.org/self-ssl.crt; #cert.pem;
 	#ssl_certificate_key /etc/nginx/ssl/cirelli.org/self-ssl.key; #cert.key;
-	#ssl_certificate /etc/letsencrypt/live/cirelli.org/cert.pem;
-	ssl_certificate /etc/letsencrypt/live/cirelli.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/cirelli.org/privkey.pem;
+	#ssl_certificate /etc/nginx/ssl/cert.pem;
+	ssl_certificate /etc/nginx/ssl/fullchain.pem;
+	ssl_certificate_key /etc/nginx/ssl/key.pem;
 
 	ssl_session_cache   shared:SSL:10m;
 	ssl_session_timeout 5m;
@@ -84,12 +93,21 @@ server {
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	#ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
-    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
+	ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
 	ssl_prefer_server_ciphers on;
 
-    access_log /var/log/nginx/athenacirelli.com/ssl_athenacirelli.com_access.log;
-    error_log /var/log/nginx/athenacirelli.com/ssl_athenacirelli.com_error.log;
-    #log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
+	access_log /var/log/nginx/athenacirelli.com/ssl_athenacirelli.com_access.log;
+	error_log /var/log/nginx/athenacirelli.com/ssl_athenacirelli.com_error.log;
+	#log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
 
 	location / {
 		try_files $uri $uri/ =404;

@@ -141,8 +141,8 @@ server {
 	ssl on;
 	#ssl_certificate /etc/nginx/ssl/scirelli.com/self-ssl.crt; #cert.pem;
 	#ssl_certificate_key /etc/nginx/ssl/scirelli.com/self-ssl.key; #cert.key;
-	ssl_certificate /etc/letsencrypt/live/cirelli.org/cert.pem;
-	ssl_certificate_key /etc/letsencrypt/live/cirelli.org/privkey.pem;
+	ssl_certificate /etc/nginx/ssl/cert.pem;
+	ssl_certificate_key /etc/nginx/ssl/key.pem;
 
 	ssl_session_cache   shared:SSL:10m;
 	ssl_session_timeout 5m;

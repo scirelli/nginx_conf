@@ -12,7 +12,7 @@ server {
 
 	server_name auction.ebidlocal.com.cirelli.org;
 
-	return 301 https://$host$request_uri;
+	return 302 https://$host$request_uri;
 
 	access_log /var/log/nginx/auction.ebidlocal.com/access.log;
 	error_log /var/log/nginx/auction.ebidlocal.com/error.log;
@@ -20,6 +20,16 @@ server {
 	gzip on;
 
 	#root /var/www/auction.ebidlocal.com.cirelli.org/html;
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
+
 	location / {
 		proxy_pass http://auction.ebidlocal.com/;
 	}
@@ -38,8 +48,8 @@ server {
 
 	ssl on;
 
-	ssl_certificate /etc/letsencrypt/live/cirelli.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/cirelli.org/privkey.pem;
+	ssl_certificate /etc/nginx/ssl/fullchain.pem;
+	ssl_certificate_key /etc/nginx/ssl/key.pem;
 
 	ssl_session_cache   shared:SSL:10m;
 	ssl_session_timeout 5m;
@@ -51,6 +61,15 @@ server {
 	ssl_prefer_server_ciphers on;
 
 	#root /var/www/auction.ebidlocal.com.cirelli.org/html;
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
 
 	location / {
 		try_files $uri $uri/ @auction;

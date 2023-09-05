@@ -10,17 +10,17 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name ebidlocal.cirelli.org;
+	server_name amazon.com xn--amzn-1na3i.com;
 
-	return 302 https://$host$request_uri;
+	#return 301 https://$host$request_uri;
 
-	access_log /var/log/nginx/ebidlocal.cirelli.org/access.log;
-	error_log /var/log/nginx/ebidlocal.cirelli.org/error.log;
+	access_log /var/log/nginx/amazon.com/access.log;
+	error_log /var/log/nginx/amazon.com/error.log;
 
 	gzip on;
 
-	#root /var/www/ebidlocal.cirelli.org/html;
-	root /home/pi/Projects/auction-ebidlocal-search-web-ui/src;
+	#root /var/www/amazon.com/html;
+	root /home/pi/Projects/amazon.com/src;
 
 	location /.well-known/ {
 		alias /var/www/cirelli.org/html/.well-known/;
@@ -30,10 +30,6 @@ server {
 		# Uncomment to enable naxsi on this location
 		# include /etc/nginx/naxsi.rules
 	}
-
-	#location / {
-	#	proxy_pass http://auction.ebidlocal.com/;
-	#}
 }
 
 # HTTPS server
@@ -42,14 +38,13 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-	server_name ebidlocal.cirelli.org;
+	server_name amazon.com xn--amzn-1na3i.com;
 
-	access_log /var/log/nginx/ebidlocal.cirelli.org/ssl_access.log;
-	error_log /var/log/nginx/ebidlocal.cirelli.org/ssl_error.log;
+	access_log /var/log/nginx/amazon.com/ssl_access.log;
+	error_log /var/log/nginx/amazon.com/ssl_error.log;
 
 	ssl on;
-
-	ssl_certificate /etc/nginx/ssl/fullchain.pem;
+	ssl_certificate	/etc/nginx/ssl/fullchain.pem;
 	ssl_certificate_key /etc/nginx/ssl/key.pem;
 
 	ssl_session_cache   shared:SSL:10m;
@@ -61,11 +56,7 @@ server {
 	ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
 	ssl_prefer_server_ciphers on;
 
-	root /home/pi/Projects/auction-ebidlocal-search-web-ui/src;
-	location /api/ {
-		#proxy_pass https://auction.ebidlocal.com/;
-		proxy_pass http://cck-core:8282/;
-	}
+	root /home/pi/Projects/amazon.com/src;
 
 	location /.well-known/ {
 		alias /var/www/cirelli.org/html/.well-known/;
@@ -76,4 +67,8 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
+	#location /api/ {
+	#	#proxy_pass https://auction.ebidlocal.com/;
+	#	proxy_pass http://rpi0w-alt-server:8282/;
+	#}
 }

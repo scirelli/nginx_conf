@@ -20,15 +20,24 @@ server {
 
 	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
 
-	return 301 https://$host$request_uri;
+	return 302 https://$host$request_uri;
 
 	root /var/www/html/athena.cirelli.org/html;
 	index index.html index.htm;
 
-    access_log /var/log/nginx/athena.cirelli.org/access.log;
-    error_log /var/log/nginx/athena.cirelli.org/error.log;
+	access_log /var/log/nginx/athena.cirelli.org/access.log;
+	error_log /var/log/nginx/athena.cirelli.org/error.log;
 
-    gzip on;
+	gzip on;
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
 
 	location / {
 		# First attempt to serve request as file, then
@@ -38,13 +47,13 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 
-    location /cgi-bin/ {
-        gzip off;
-        root /var/www/html/athena.cirelli.org;
-        fastcgi_pass unix:/var/run/fcgiwrap.socket;
-        include /etc/nginx/fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
+	location /cgi-bin/ {
+		gzip off;
+		root /var/www/html/athena.cirelli.org;
+		fastcgi_pass unix:/var/run/fcgiwrap.socket;
+		include /etc/nginx/fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
 
 	error_page 404 /404.html;
 
@@ -74,9 +83,9 @@ server {
 
 	#ssl_certificate /etc/nginx/ssl/cirelli.org/self-ssl.crt; #cert.pem;
 	#ssl_certificate_key /etc/nginx/ssl/cirelli.org/self-ssl.key; #cert.key;
-	#ssl_certificate /etc/letsencrypt/live/cirelli.org/cert.pem;
-	ssl_certificate /etc/letsencrypt/live/cirelli.org/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/cirelli.org/privkey.pem;
+	#ssl_certificate /etc/nginx/ssl/cert.pem;
+	ssl_certificate /etc/nginx/ssl/fullchain.pem;
+	ssl_certificate_key /etc/nginx/ssl/key.pem;
 
 	ssl_session_cache   shared:SSL:10m;
 	ssl_session_timeout 5m;
@@ -90,6 +99,15 @@ server {
 	access_log /var/log/nginx/athena.cirelli.org/ssl_athena.cirelli.org_access.log;
 	error_log /var/log/nginx/athena.cirelli.org/ssl_athena.cirelli.org_error.log;
 	#log_format compression '$remote_addr - $remote_user [$time_local] ' '"$request" $status $bytes_sent ' '"$http_referer" "$http_user_agent" "$gzip_ratio"' '"$request_body_file"';
+
+	location /.well-known/ {
+		alias /var/www/cirelli.org/html/.well-known/;
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+	}
 
 	location / {
 		try_files $uri $uri/ =404;
