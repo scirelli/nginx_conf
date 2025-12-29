@@ -20,6 +20,8 @@ http {
 	##
 
 	sendfile on;
+    client_max_body_size 25M;
+    client_body_buffer_size 25M;
 	tcp_nopush on;
 	tcp_nodelay on;
 	keepalive_timeout 65;
